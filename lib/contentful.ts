@@ -1,8 +1,13 @@
-import { createClient } from "contentful";
+import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`,
+    headers: {
+      Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
+    },
+  }),
+  cache: new InMemoryCache(),
 });
 
 export default client;
