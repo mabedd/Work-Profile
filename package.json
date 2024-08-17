@@ -13,11 +13,14 @@
     "@apollo/experimental-nextjs-app-support": "^0.11.2",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@react-three/drei": "^9.111.0",
+    "@react-three/fiber": "^8.17.5",
     "@tabler/icons-react": "^3.12.0",
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.5.0",
     "aceternity-ui": "^0.2.2",
+    "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "contentful": "^10.14.0",
@@ -34,7 +37,9 @@
     "react-scroll": "^1.9.0",
     "styled-components": "^6.1.12",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.167.1",
+    "three-globe": "^2.31.1"
   },
   "devDependencies": {
     "@types/node": "^20",
