@@ -1,3 +1,15 @@
+import Link from "next/link";
+import Markdown from "react-markdown";
+
+import { getClient } from "@/lib/contentful";
+import {
+  GET_ABOUT_SECTION,
+  GET_ALL_EXPERIENCES,
+  GET_ALL_EDUCATION_ENTRIES,
+} from "@/graphql/queries";
+
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+
 import { HackathonCard } from "@/components/hackathon-card";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
@@ -6,12 +18,81 @@ import { ResumeCard } from "@/components/resume-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
-import Link from "next/link";
-import Markdown from "react-markdown";
+
+interface Experience {
+  id: string;
+  company: string;
+  position: string;
+  startDate: string;
+  endDate: string | null;
+  description: string;
+  logoImage: {
+    url: string;
+  } | null;
+  href?: string;
+  badges?: string[];
+}
+interface Education {
+  institution: string | null;
+  degree: string | null;
+  fieldOfStudy: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  description: string | null;
+}
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default function Page() {
+export default async function Page() {
+  const client = getClient();
+
+  // Fetch about section
+  const { data: aboutData } = await client.query({
+    query: GET_ABOUT_SECTION,
+    variables: { id: "1T4CtQFzDKGlmQzE9MygKP" },
+  });
+  const aboutSection = aboutData?.aboutSection || [];
+  const { description } = aboutSection;
+
+  // Fetch experiences
+  const { data: experienceData } = await client.query({
+    query: GET_ALL_EXPERIENCES,
+  });
+  const experiences = experienceData?.entryCollection?.items || [];
+  const validExperiences = experiences.filter(
+    (work) =>
+      work.company ||
+      work.position ||
+      work.startDate ||
+      work.description ||
+      work.logoImage
+  );
+
+  // TODO: Fetch Education
+  const { data: educationData } = await client.query({
+    query: GET_ALL_EDUCATION_ENTRIES,
+    variables: {
+      limit: 10,
+      skip: 0, // Change for pagination
+    },
+  });
+  const educationEntries: Education[] =
+    educationData?.entryCollection?.items.map((entry: any) => ({
+      id: entry.sys.id,
+      institution: entry.institution || "",
+      degree: entry.degree || "",
+      fieldOfStudy: entry.fieldOfStudy || "",
+      startDate: entry.startDate
+        ? new Date(entry.startDate).getFullYear().toString()
+        : "",
+      endDate: entry.endDate
+        ? new Date(entry.endDate).getFullYear().toString()
+        : "Present",
+      description: entry.description || "",
+    })) || [];
+
+  // Fetch skills
+
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       <section id="hero">
@@ -44,9 +125,9 @@ export default function Page() {
           <h2 className="text-xl font-bold">About</h2>
         </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
-          <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-            {DATA.summary}
-          </Markdown>
+          <div className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
+            {documentToReactComponents(description.json)}
+          </div>
         </BlurFade>
       </section>
       <section id="work">
@@ -54,21 +135,22 @@ export default function Page() {
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
             <h2 className="text-xl font-bold">Work Experience</h2>
           </BlurFade>
-          {DATA.work.map((work, id) => (
+          {validExperiences.map((work, index) => (
             <BlurFade
-              key={work.company}
-              delay={BLUR_FADE_DELAY * 6 + id * 0.05}
+              key={`${work.company ?? "experience"}-${index}`} // Fallback to "experience" if company is null
+              delay={BLUR_FADE_DELAY * 6 + index * 0.05}
             >
               <ResumeCard
-                key={work.company}
-                logoUrl={work.logoUrl}
-                altText={work.company}
-                title={work.company}
-                subtitle={work.title}
-                href={work.href}
-                badges={work.badges}
-                period={`${work.start} - ${work.end ?? "Present"}`}
-                description={work.description}
+                logoUrl={work.logoImage?.url ?? ""}
+                altText={work.company ?? ""}
+                title={work.company ?? ""}
+                subtitle={work.position ?? ""}
+                href={work.href ?? ""}
+                badges={work.badges ?? []}
+                period={`${work.startDate ?? ""} - ${
+                  work.endDate ?? "Present"
+                }`}
+                description={work.description ?? ""}
               />
             </BlurFade>
           ))}
@@ -79,19 +161,19 @@ export default function Page() {
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
             <h2 className="text-xl font-bold">Education</h2>
           </BlurFade>
-          {DATA.education.map((education, id) => (
+          {educationEntries.map((education, id) => (
             <BlurFade
-              key={education.school}
+              key={education.id} // Use the unique ID from Contentful
               delay={BLUR_FADE_DELAY * 8 + id * 0.05}
             >
               <ResumeCard
-                key={education.school}
-                href={education.href}
-                logoUrl={education.logoUrl}
-                altText={education.school}
-                title={education.school}
-                subtitle={education.degree}
-                period={`${education.start} - ${education.end}`}
+                key={education.id} // Use the unique ID from Contentful
+                href={education.institution || ""}
+                logoUrl={education.institution || ""}
+                altText={education.institution || ""}
+                title={education.institution || ""}
+                subtitle={education.fieldOfStudy || ""}
+                period={`${education.startDate} - ${education.endDate}`}
               />
             </BlurFade>
           ))}
