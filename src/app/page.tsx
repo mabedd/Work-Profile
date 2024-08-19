@@ -1,15 +1,6 @@
 import Link from "next/link";
 import Markdown from "react-markdown";
 
-import { getClient } from "@/lib/contentful";
-import {
-  GET_ABOUT_SECTION,
-  GET_ALL_EXPERIENCES,
-  GET_ALL_EDUCATION_ENTRIES,
-} from "@/graphql/queries";
-
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-
 import { HackathonCard } from "@/components/hackathon-card";
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
@@ -19,80 +10,93 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
 
-interface Experience {
-  id: string;
-  company: string;
-  position: string;
-  startDate: string;
-  endDate: string | null;
-  description: string;
-  logoImage: {
-    url: string;
-  } | null;
-  href?: string;
-  badges?: string[];
-}
-interface Education {
-  institution: string | null;
-  degree: string | null;
-  fieldOfStudy: string | null;
-  startDate: string | null;
-  endDate: string | null;
-  description: string | null;
-}
+const experiences = [
+  {
+    id: "1",
+    company: "National Health Information Center (NHIC) - Saudi Health Council",
+    position: "Coop Trainee",
+    startDate: "2021-08",
+    endDate: "2022-03",
+    description: [
+      "Built National Health Accounts system for Revenue Cycle Management among healthcare providers.",
+      "Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+    ],
+    logoImage: null,
+  },
+  {
+    id: "1",
+    company: "National Health Information Center (NHIC) - Saudi Health Council",
+    position: "Coop Trainee",
+    startDate: "2021-08",
+    endDate: "2022-03",
+    description:
+      "Built National Health Accounts system for Revenue Cycle Management among healthcare providers. Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+    logoImage: null,
+  },
+  {
+    id: "2",
+    company: "Research and Initiatives Center - Prince Sultan University",
+    position: "Undergraduate Research Assistant",
+    startDate: "2020-09",
+    endDate: "2021-07",
+    description:
+      "Worked on several research projects in Computer Vision and Machine Learning. Developed Object Detection, Face Recognition, and Image Classification applications.",
+    logoImage: null,
+  },
+  {
+    id: "1",
+    company: "National Health Information Center (NHIC) - Saudi Health Council",
+    position: "Coop Trainee",
+    startDate: "2021-08",
+    endDate: "2022-03",
+    description:
+      "Built National Health Accounts system for Revenue Cycle Management among healthcare providers. Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+    logoImage: null,
+  },
+];
+
+const educationEntries = [
+  {
+    id: "1",
+    institution: "Prince Sultan University",
+    degree: "B.Sc. in Software Engineering",
+    fieldOfStudy: "Software Engineering",
+    startDate: "2017-08-06",
+    endDate: "2021-05-27",
+    description: "Focused on Software Development, AI, and Health Informatics.",
+  },
+];
+
+// Software Enginnering
+// Development
+// Digital Health
+// Business
+// Data
+const skills = [
+  { skillName: "JavaScript", category: "Programming" },
+  { skillName: "React", category: "Frontend" },
+  { skillName: "Node.js", category: "Backend" },
+  { skillName: "TypeScript", category: "Programming" },
+  { skillName: "HTML", category: "Frontend" },
+  { skillName: "CSS", category: "Frontend" },
+  { skillName: "Express.js", category: "Backend" },
+  { skillName: "MongoDB", category: "Database" },
+  { skillName: "SQL", category: "Database" },
+];
+
+// Group skills by category
+const groupedSkills = skills.reduce((acc, skill) => {
+  const { category, skillName } = skill;
+  if (!acc[category]) {
+    acc[category] = [];
+  }
+  acc[category].push(skillName);
+  return acc;
+}, {});
 
 const BLUR_FADE_DELAY = 0.04;
 
 export default async function Page() {
-  const client = getClient();
-
-  // Fetch about section
-  const { data: aboutData } = await client.query({
-    query: GET_ABOUT_SECTION,
-    variables: { id: "1T4CtQFzDKGlmQzE9MygKP" },
-  });
-  const aboutSection = aboutData?.aboutSection || [];
-  const { description } = aboutSection;
-
-  // Fetch experiences
-  const { data: experienceData } = await client.query({
-    query: GET_ALL_EXPERIENCES,
-  });
-  const experiences = experienceData?.entryCollection?.items || [];
-  const validExperiences = experiences.filter(
-    (work) =>
-      work.company ||
-      work.position ||
-      work.startDate ||
-      work.description ||
-      work.logoImage
-  );
-
-  // TODO: Fetch Education
-  const { data: educationData } = await client.query({
-    query: GET_ALL_EDUCATION_ENTRIES,
-    variables: {
-      limit: 10,
-      skip: 0, // Change for pagination
-    },
-  });
-  const educationEntries: Education[] =
-    educationData?.entryCollection?.items.map((entry: any) => ({
-      id: entry.sys.id,
-      institution: entry.institution || "",
-      degree: entry.degree || "",
-      fieldOfStudy: entry.fieldOfStudy || "",
-      startDate: entry.startDate
-        ? new Date(entry.startDate).getFullYear().toString()
-        : "",
-      endDate: entry.endDate
-        ? new Date(entry.endDate).getFullYear().toString()
-        : "Present",
-      description: entry.description || "",
-    })) || [];
-
-  // Fetch skills
-
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       <section id="hero">
@@ -120,42 +124,48 @@ export default async function Page() {
           </div>
         </div>
       </section>
+
       <section id="about">
         <BlurFade delay={BLUR_FADE_DELAY * 3}>
           <h2 className="text-xl font-bold">About</h2>
         </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
           <div className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-            {documentToReactComponents(description.json)}
+            {`I specialize in developing innovative solutions that leverage AI to improve healthcare systems.`}
           </div>
         </BlurFade>
       </section>
+
       <section id="work">
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
             <h2 className="text-xl font-bold">Work Experience</h2>
           </BlurFade>
-          {validExperiences.map((work, index) => (
-            <BlurFade
-              key={`${work.company ?? "experience"}-${index}`} // Fallback to "experience" if company is null
-              delay={BLUR_FADE_DELAY * 6 + index * 0.05}
-            >
+          {experiences.map((work, index) => (
+            <BlurFade key={work.id} delay={BLUR_FADE_DELAY * 6 + index * 0.05}>
               <ResumeCard
                 logoUrl={work.logoImage?.url ?? ""}
                 altText={work.company ?? ""}
                 title={work.company ?? ""}
                 subtitle={work.position ?? ""}
-                href={work.href ?? ""}
-                badges={work.badges ?? []}
-                period={`${work.startDate ?? ""} - ${
-                  work.endDate ?? "Present"
-                }`}
-                description={work.description ?? ""}
+                period={`${work.startDate} - ${work.endDate}`}
+                description={
+                  Array.isArray(work.description) ? (
+                    <ul className="list-disc pl-5">
+                      {work.description.map((point, i) => (
+                        <li key={i}>{point}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{work.description}</p>
+                  )
+                }
               />
             </BlurFade>
           ))}
         </div>
       </section>
+
       <section id="education">
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
@@ -163,37 +173,68 @@ export default async function Page() {
           </BlurFade>
           {educationEntries.map((education, id) => (
             <BlurFade
-              key={education.id} // Use the unique ID from Contentful
+              key={education.id}
               delay={BLUR_FADE_DELAY * 8 + id * 0.05}
             >
               <ResumeCard
-                key={education.id} // Use the unique ID from Contentful
-                href={education.institution || ""}
-                logoUrl={education.institution || ""}
+                logoUrl=""
                 altText={education.institution || ""}
                 title={education.institution || ""}
-                subtitle={education.fieldOfStudy || ""}
+                subtitle={education.degree || ""}
                 period={`${education.startDate} - ${education.endDate}`}
+                description={education.description || ""}
               />
             </BlurFade>
           ))}
         </div>
       </section>
+
+      <section id="projects">
+        <div className="flex min-h-0 flex-col gap-y-3">
+          <BlurFade delay={BLUR_FADE_DELAY * 5}>
+            <h2 className="text-xl font-bold">Projects</h2>
+          </BlurFade>
+          {experiences.map((work, index) => (
+            <BlurFade key={work.id} delay={BLUR_FADE_DELAY * 6 + index * 0.05}>
+              <ResumeCard
+                logoUrl={work.logoImage?.url ?? ""}
+                altText={work.company ?? ""}
+                title={work.company ?? ""}
+                subtitle={work.position ?? ""}
+                period={`${work.startDate} - ${work.endDate}`}
+                description={work.description ?? ""}
+              />
+            </BlurFade>
+          ))}
+        </div>
+      </section>
+
       <section id="skills">
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 9}>
             <h2 className="text-xl font-bold">Skills</h2>
           </BlurFade>
-          <div className="flex flex-wrap gap-1">
-            {DATA.skills.map((skill, id) => (
-              <BlurFade key={skill} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
-                <Badge key={skill}>{skill}</Badge>
+          {Object.keys(groupedSkills).map((category, index) => (
+            <div key={category} className="flex flex-col gap-y-2">
+              <BlurFade delay={BLUR_FADE_DELAY * 10 + index * 0.05}>
+                <h3 className="text-lg font-semibold">{category}</h3>
               </BlurFade>
-            ))}
-          </div>
+              <div className="flex flex-wrap gap-1">
+                {groupedSkills[category].map((skill, id) => (
+                  <BlurFade
+                    key={skill}
+                    delay={BLUR_FADE_DELAY * 11 + id * 0.05}
+                  >
+                    <Badge key={skill}>{skill}</Badge>
+                  </BlurFade>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
-      <section id="projects">
+
+      <section id="opensource-projects">
         <div className="space-y-12 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 11}>
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -202,7 +243,7 @@ export default async function Page() {
                   My Projects
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  Check out my latest work
+                  Check out my latest open source projects
                 </h2>
                 <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   I&apos;ve worked on a variety of projects, from simple
@@ -232,49 +273,6 @@ export default async function Page() {
               </BlurFade>
             ))}
           </div>
-        </div>
-      </section>
-      <section id="hackathons">
-        <div className="space-y-12 w-full py-12">
-          <BlurFade delay={BLUR_FADE_DELAY * 13}>
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
-                  Hackathons
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  I like building things
-                </h2>
-                <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  During my time in university, I attended{" "}
-                  {DATA.hackathons.length}+ hackathons. People from around the
-                  country would come together and build incredible things in 2-3
-                  days. It was eye-opening to see the endless possibilities
-                  brought to life by a group of motivated and passionate
-                  individuals.
-                </p>
-              </div>
-            </div>
-          </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <ul className="mb-4 ml-4 divide-y divide-dashed border-l">
-              {DATA.hackathons.map((project, id) => (
-                <BlurFade
-                  key={project.title + project.dates}
-                  delay={BLUR_FADE_DELAY * 15 + id * 0.05}
-                >
-                  <HackathonCard
-                    title={project.title}
-                    description={project.description}
-                    location={project.location}
-                    dates={project.dates}
-                    image={project.image}
-                    links={project.links}
-                  />
-                </BlurFade>
-              ))}
-            </ul>
-          </BlurFade>
         </div>
       </section>
       <section id="contact">

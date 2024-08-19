@@ -32,12 +32,12 @@ export const GET_ALL_EXPERIENCES = gql`
 
 export const GET_ALL_EDUCATION_ENTRIES = gql`
   query GetAllEducationEntries {
-    entryCollection {
+    entryCollection(where: { contentTypeId: "3rRMygIyGs219YJGWIvrHP" }) {
       items {
         sys {
           id
         }
-        ... on ContentType3RRMygIyGs219YjgwIvrHp {
+        ... on ContentType3rRMygIyGs219YJGWIvrHP {
           institution
           degree
           fieldOfStudy
