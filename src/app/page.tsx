@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Markdown from "react-markdown";
 
@@ -13,8 +14,8 @@ import { DATA } from "@/data/resume";
 const experiences = [
   {
     id: "1",
-    company: "National Health Information Center (NHIC) - Saudi Health Council",
-    position: "Coop Trainee",
+    company: "National Health Information Center (NHIC)",
+    position: "Software Engineer",
     startDate: "2021-08",
     endDate: "2022-03",
     description: [
@@ -25,7 +26,7 @@ const experiences = [
   },
   {
     id: "1",
-    company: "National Health Information Center (NHIC) - Saudi Health Council",
+    company: "National Health Information Center (NHIC)",
     position: "Coop Trainee",
     startDate: "2021-08",
     endDate: "2022-03",
@@ -45,8 +46,8 @@ const experiences = [
   },
   {
     id: "1",
-    company: "National Health Information Center (NHIC) - Saudi Health Council",
-    position: "Coop Trainee",
+    company: "Smart Methods",
+    position: "Summer Intern",
     startDate: "2021-08",
     endDate: "2022-03",
     description:
@@ -97,6 +98,17 @@ const groupedSkills = skills.reduce((acc, skill) => {
 const BLUR_FADE_DELAY = 0.04;
 
 export default async function Page() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const subject = form.subject.value;
+    const message = form.message.value;
+    const mailtoLink = `mailto:mohammed.o.abed@outlook.com?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(message)}`;
+    window.location.href = mailtoLink;
+  };
+
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       <section id="hero">
@@ -131,7 +143,18 @@ export default async function Page() {
         </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
           <div className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
-            {`I specialize in developing innovative solutions that leverage AI to improve healthcare systems.`}
+            Passionate for revolutionizing the Digital Health sector. My journey
+            has been driven by a commitment to developing innovative Health IT
+            solutions that address complex challenges. With hands-on experience
+            in leading national Digital Health projects, I’ve had the privilege
+            of contributing to groundbreaking advancements in Software
+            Development, AI, and Health Informatics.
+            <br />
+            <br />
+            I’m not just about coding and systems; I’m about making a tangible
+            impact. My enthusiasm for technology is matched by my eagerness to
+            continuously learn and evolve, ensuring that I stay at the forefront
+            of this rapidly changing industry.
           </div>
         </BlurFade>
       </section>
@@ -286,16 +309,68 @@ export default async function Page() {
                 Get in Touch
               </h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Want to chat? Just shoot me a dm{" "}
+                Want to chat? Just shoot me a message via the form below or{" "}
                 <Link
                   href={DATA.contact.social.X.url}
                   className="text-blue-500 hover:underline"
                 >
-                  with a direct question on twitter
+                  with a direct question on Twitter
                 </Link>{" "}
                 and I&apos;ll respond whenever I can. I will ignore all
                 soliciting.
               </p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Row 1: Name, Email */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    className="w-full px-4 py-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    className="w-full px-4 py-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                {/* Row 2: Company, Subject */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="company"
+                    placeholder="Your Company"
+                    className="w-full px-4 py-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <input
+                    type="text"
+                    name="subject"
+                    placeholder="Subject"
+                    className="w-full px-4 py-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                {/* Row 3: Message (Textarea) */}
+                <div>
+                  <textarea
+                    name="message"
+                    rows="4"
+                    placeholder="Your Message"
+                    className="w-full px-4 py-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  ></textarea>
+                </div>
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="px-4 py-2 text-sm text-white bg-black dark:bg-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Send Message
+                </button>
+              </form>
             </div>
           </BlurFade>
         </div>
