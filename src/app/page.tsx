@@ -19,29 +19,87 @@ const experiences = [
     startDate: "2021-08",
     endDate: "2022-03",
     description: [
-      "Built National Health Accounts system for Revenue Cycle Management among healthcare providers.",
-      "Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+      {
+        point:
+          "Involving in the successful onboarding of healthcare facilities with the National Health Unified Record (nphies):",
+        subpoints: [
+          "Coordinating with healthcare facilities to ensure alignment with NHIC Core Registry and regulations.",
+          "Actively contributing to various technical activities providing insights and ensuring project strategy alignment.",
+        ],
+      },
+      {
+        point:
+          "Leading the technical management and direction of the NHIC Core Registry System:",
+        subpoints: [
+          "Participating in the seamless integration of health organizations with CRS across the sector.",
+          "Integrating the system with new data sources such as MOI, making the system more valuable for consumers",
+        ],
+      },
+      {
+        point:
+          "Designed and Developed Object Identifier (OID) Registry system for issuing and managing OIDs:",
+        subpoints: [
+          "Successfully automated the process of issuing OIDs in a reliable way.",
+          "Integrated the system with the Unified Health Record (nphies) directly for OID verification and with Seha Platform for OID display.",
+        ],
+      },
+      {
+        point:
+          "Successfully automated the process of clinical codes mapping to standardized code sets with the use of AI and NLP",
+      },
+      {
+        point:
+          "Participated in the build of a DevOps mindset among NHIC team for process optimization and automation:",
+        subpoints: [
+          "Facilitated cross-team collaboration by introducing and advocating for DevOps practices.",
+          "Implemented a CI/CD pipeline for deployment automation.",
+        ],
+      },
     ],
     logoImage: null,
   },
   {
-    id: "1",
+    id: "2",
     company: "National Health Information Center (NHIC)",
     position: "Coop Trainee",
     startDate: "2021-08",
     endDate: "2022-03",
-    description:
-      "Built National Health Accounts system for Revenue Cycle Management among healthcare providers. Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+    description: [
+      {
+        point:
+          "Built National Health Accounts system for Revenue Cycle Management among healthcare providers.",
+      },
+      {
+        point:
+          "Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+      },
+    ],
     logoImage: null,
   },
   {
-    id: "2",
+    id: "3",
     company: "Research and Initiatives Center - Prince Sultan University",
     position: "Undergraduate Research Assistant",
     startDate: "2020-09",
     endDate: "2021-07",
-    description:
-      "Worked on several research projects in Computer Vision and Machine Learning. Developed Object Detection, Face Recognition, and Image Classification applications.",
+    description: [
+      {
+        point:
+          "Worked on several research projects in Computer Vision and Machine Learning:",
+        subpoints: [
+          "Facilitated cross-team collaboration by introducing and advocating for DevOps practices.",
+          "Implemented a CI/CD pipeline for deployment automation.",
+        ],
+      },
+      {
+        point:
+          "Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+        subpoints: [
+          "Facilitated cross-team collaboration by introducing and advocating for DevOps practices.",
+          "Implemented a CI/CD pipeline for deployment automation.",
+        ],
+      },
+    ],
     logoImage: null,
   },
   {
@@ -52,6 +110,41 @@ const experiences = [
     endDate: "2022-03",
     description:
       "Built National Health Accounts system for Revenue Cycle Management among healthcare providers. Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+    logoImage: null,
+  },
+];
+
+const workProjects = [
+  {
+    id: "1",
+    company: "National Unified Health Record (nphies)",
+    position: "Software Engineer",
+    startDate: "2021-08",
+    endDate: "2022-03",
+    description: [
+      "Built National Health Accounts system for Revenue Cycle Management among healthcare providers.",
+      "Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+    ],
+    logoImage: null,
+  },
+  {
+    id: "1",
+    company: "National Health Core Registry",
+    position: "Coop Trainee",
+    startDate: "2021-08",
+    endDate: "2022-03",
+    description:
+      "Built National Health Accounts system for Revenue Cycle Management among healthcare providers. Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
+    logoImage: null,
+  },
+  {
+    id: "2",
+    company: "HL7 Object Identifier (OID) Registry",
+    position: "Undergraduate Research Assistant",
+    startDate: "2020-09",
+    endDate: "2021-07",
+    description:
+      "Worked on several research projects in Computer Vision and Machine Learning. Developed Object Detection, Face Recognition, and Image Classification applications.",
     logoImage: null,
   },
 ];
@@ -74,15 +167,62 @@ const educationEntries = [
 // Business
 // Data
 const skills = [
-  { skillName: "JavaScript", category: "Programming" },
-  { skillName: "React", category: "Frontend" },
-  { skillName: "Node.js", category: "Backend" },
-  { skillName: "TypeScript", category: "Programming" },
-  { skillName: "HTML", category: "Frontend" },
-  { skillName: "CSS", category: "Frontend" },
-  { skillName: "Express.js", category: "Backend" },
-  { skillName: "MongoDB", category: "Database" },
-  { skillName: "SQL", category: "Database" },
+  // Software Enginnering
+  {
+    skillName: "Business / Systems Analysis",
+    category: "Software Engineering",
+  },
+  { skillName: "Solution Architecture", category: "Software Engineering" },
+  { skillName: "Software Modelling", category: "Software Engineering" },
+  {
+    skillName: "Quality Assurance & Testing",
+    category: "Software Engineering",
+  },
+  {
+    skillName: "Business / Systems Analysis",
+    category: "Software Engineering",
+  },
+
+  // Development
+  { skillName: "React", category: "Development" },
+  { skillName: "Next", category: "Development" },
+  { skillName: ".NET", category: "Development" },
+  { skillName: "JavaScript", category: "Development" },
+  { skillName: "TypeScript", category: "Development" },
+  { skillName: "C#", category: "Development" },
+  { skillName: "Python", category: "Development" },
+  { skillName: "SQL", category: "Development" },
+  { skillName: "NoSQL", category: "Development" },
+  { skillName: "Git", category: "Development" },
+  { skillName: "CI/CD Pipeline", category: "Development" },
+
+  // Business and Management
+  { skillName: "Project Management", category: "Business" },
+  { skillName: "Agile Methodologies", category: "Business" },
+  { skillName: "Scrum", category: "Business" },
+  { skillName: "Service Level Agreements", category: "Business" },
+  { skillName: "Business Requirements Documet", category: "Business" },
+
+  // Data
+  { skillName: "Data Analysis", category: "Data" },
+  { skillName: "Dashboard Reporting", category: "Data" },
+  { skillName: "Business Intelligence", category: "Data" },
+  { skillName: "Data Flow Design", category: "Data" },
+  { skillName: "Machine Learning", category: "Data" },
+  { skillName: "Predictive Analysis", category: "Data" },
+
+  // Digital Health
+  { skillName: "Unified Health Record", category: "Digital Health" },
+  { skillName: "HL7 Background", category: "Digital Health" },
+  {
+    skillName: "Health Information Exchange (HIE)",
+    category: "Digital Health",
+  },
+
+  // Tools and Technologies
+  { skillName: "Jira", category: "Tools & Technologies" },
+  { skillName: "Azure DevOps", category: "Tools & Technologies" },
+  { skillName: "Apigee API Management", category: "Tools & Technologies" },
 ];
 
 // Group skills by category
@@ -175,8 +315,23 @@ export default async function Page() {
                 description={
                   Array.isArray(work.description) ? (
                     <ul className="list-disc pl-5">
-                      {work.description.map((point, i) => (
-                        <li key={i}>{point}</li>
+                      {work.description.map((item, i) => (
+                        <li key={i} className="mb-2">
+                          {" "}
+                          {/* Add margin-bottom for spacing */}
+                          {item.point}
+                          {item.subpoints && (
+                            <ul className="list-[circle] pl-5 mt-1">
+                              {" "}
+                              {/* Add margin-top for spacing */}
+                              {item.subpoints.map((subpoint, j) => (
+                                <li key={j} className="mb-1">
+                                  {subpoint}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
                       ))}
                     </ul>
                   ) : (
@@ -212,12 +367,12 @@ export default async function Page() {
         </div>
       </section>
 
-      <section id="projects">
+      <section id="work-projects">
         <div className="flex min-h-0 flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="text-xl font-bold">Projects</h2>
+            <h2 className="text-xl font-bold">Work Projects</h2>
           </BlurFade>
-          {experiences.map((work, index) => (
+          {workProjects.map((work, index) => (
             <BlurFade key={work.id} delay={BLUR_FADE_DELAY * 6 + index * 0.05}>
               <ResumeCard
                 logoUrl={work.logoImage?.url ?? ""}
@@ -225,7 +380,17 @@ export default async function Page() {
                 title={work.company ?? ""}
                 subtitle={work.position ?? ""}
                 period={`${work.startDate} - ${work.endDate}`}
-                description={work.description ?? ""}
+                description={
+                  Array.isArray(work.description) ? (
+                    <ul className="list-disc pl-5">
+                      {work.description.map((point, i) => (
+                        <li key={i}>{point}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{work.description}</p>
+                  )
+                }
               />
             </BlurFade>
           ))}
