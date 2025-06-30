@@ -7,149 +7,334 @@ import BlurFade from '@/components/magicui/blur-fade'
 import BlurFadeText from '@/components/magicui/blur-fade-text'
 import { ProjectCard } from '@/components/project-card'
 import { ResumeCard } from '@/components/resume-card'
+import { CompanyResumeCard } from '@/components/company-resumr-card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { DATA } from '@/data/resume'
 
-const experiences = [
+// Role inside a company
+interface Role {
+  id: string
+  position: string
+  startDate: string
+  endDate: string
+  description:
+    | Array<{
+        point: string
+        subpoints?: string[]
+      }>
+    | string
+}
+
+// Company with possible multiple roles
+interface Experience {
+  id: string
+  company: string
+  logoImage?: {
+    url?: string
+  } | null
+  // Only required if no roles array
+  startDate?: string
+  endDate?: string
+  description?:
+    | string
+    | {
+        point: string
+        subpoints?: string[]
+      }[]
+  // Optional for single-role companies
+  roles?: {
+    id: string
+    position: string
+    startDate: string
+    endDate: string
+    description:
+      | string
+      | {
+          point: string
+          subpoints?: string[]
+        }[]
+  }[]
+}
+
+// Education entry
+interface EducationEntry {
+  id: string
+  institution: string
+  degree: string
+  fieldOfStudy: string
+  startDate: string
+  endDate: string
+  description: string
+}
+
+// Skill entry
+interface Skill {
+  skillName: string
+  category: string
+}
+
+const experiences: Experience[] = [
   {
     id: '1',
     company: 'National Health Information Center (NHIC)',
-    position: 'Software Engineer',
-    startDate: '2021-08',
-    endDate: '2022-03',
-    description: [
+    logoImage: { url: '/logoNHIC.png' },
+    roles: [
       {
-        point:
-          'Involving in the successful onboarding of healthcare facilities with the National Health Unified Record (nphies):',
-        subpoints: [
-          'Coordinating with healthcare facilities to ensure alignment with NHIC Core Registry and regulations.',
-          'Actively contributing to various technical activities providing insights and ensuring project strategy alignment.',
+        id: 'r1',
+        position: 'Lead Software Engineer',
+        startDate: '2022-04',
+        endDate: 'Present',
+        description: [
+          {
+            point: 'Leading the Software Development Team.',
+            subpoints: [
+              'Lead a cross-functional software development team focused on building solutions and services.',
+              'Foster a collaborative and agile environment, encouraging continuous learning and innovation.',
+              'Ensure technical excellence, high code quality, and effective task management across the team.',
+            ],
+          },
+          {
+            point:
+              'Technically Supervising and Supporting the Implementation of National NHIC Projects.',
+            subpoints: [
+              'Collaborating closely with involved teams to translate requirements into technical specifications.',
+              'Actively participating in technical planning, system integration, and deployment cycles.',
+              'Overseeing technical validations, system configurations, and system testing during project rollouts.',
+              'Ensured compliance with security, scalability, and performance benchmarks.',
+            ],
+          },
+          {
+            point:
+              'Participation in the National Unified Health Record (nphies) Execution and Operation.',
+            subpoints: [
+              'Established a standardized approach for modalities data exchange with nphies, ensuring interoperability standards alignment.',
+              'Participated in the inclusion of visitors patient records, ensuring broader clinical data coverage.',
+            ],
+          },
+          {
+            point: 'Enhancing National Health Core Registry Services.',
+            subpoints: [
+              'Lead initiatives to integrate new data sources into NHCR to expand coverage and improve data.',
+              'Optimize integrations with consumers to enhance service delivery and quality.',
+              'Build initiatives to establish optimized integration with national health solutions.',
+            ],
+          },
+          {
+            point:
+              'Contributing to the Health IT Certification Program (Mutamad).',
+            subpoints: [
+              'Serve as a Product Owner for the Mutamad project, managing vision, backlog, and features.',
+              'Play a key role in designing, building, and refining national certification standards.',
+              'Ensure alignment with international frameworks such as HL7, ISO, and IHE profiles.',
+              'Work closely with regulatory bodies and technical teams to ensure the standards are supportive.',
+            ],
+          },
         ],
       },
       {
-        point:
-          'Leading the technical management and direction of the NHIC Core Registry System:',
-        subpoints: [
-          'Participating in the seamless integration of health organizations with CRS across the sector.',
-          'Integrating the system with new data sources such as MOI, making the system more valuable for consumers',
-        ],
-      },
-      {
-        point:
-          'Designed and Developed Object Identifier (OID) Registry system for issuing and managing OIDs:',
-        subpoints: [
-          'Successfully automated the process of issuing OIDs in a reliable way.',
-          'Integrated the system with the Unified Health Record (nphies) directly for OID verification and with Seha Platform for OID display.',
-        ],
-      },
-      {
-        point:
-          'Successfully automated the process of clinical codes mapping to standardized code sets with the use of AI and NLP',
-      },
-      {
-        point:
-          'Participated in the build of a DevOps mindset among NHIC team for process optimization and automation:',
-        subpoints: [
-          'Facilitated cross-team collaboration by introducing and advocating for DevOps practices.',
-          'Implemented a CI/CD pipeline for deployment automation.',
+        id: 'r2',
+        position: 'Software Engineer',
+        startDate: '2021-08',
+        endDate: '2022-03',
+        description: [
+          {
+            point:
+              'Participated in Healthcare Organizations Onboarding with National Unified Health Record (nphies).',
+            subpoints: [
+              'Managed the integration with National Health Core Registry which is a core prerequisite.',
+              'Involved in overviewing and managing onboarding activities in an Agile manner.',
+              'Contributed to key technical activities ensuring alignment with project goals and requirements.',
+            ],
+          },
+          {
+            point: 'Contributed to the Build of NHIC eServices Portal.',
+            subpoints: [
+              'Implemented Services Catalog allowing users to explore, request, and track onboarding to services.',
+              'Supported development of a centralized Single Sign-On ensuring unified access across all services.',
+              'Participated in the setup of an integrated Developer Portal to facilitate API integration.',
+              'Facilitated API access request workflows and tracking to ensure efficient consumer integrations.',
+            ],
+          },
+          {
+            point: 'Led the Technical Activities of the Core Registry System.',
+            subpoints: [
+              'Participated in the successful integration of healthcare consumers into the system.',
+              'Continuously improved services to meet evolving consumer needs and industry standards.',
+              'Engaged in system enhancements, including data flows and technical architecture.',
+            ],
+          },
+          {
+            point:
+              'Designed and Developed Object Identifier (OID) Registry system for issuing and managing OIDs for nphies Clinical Services program.',
+            subpoints: [
+              'Successfully fasted the process of issuing OIDs in a reliable way.',
+              'Designed the workflow in a way that meets HL7 and NHIC standards.',
+              'Integrated the system with involved parties to ensure better system utilization.',
+              'Established an effective workflow for OIDs through the direct integration with nphies.',
+            ],
+          },
+          {
+            point:
+              'Proposed and implemented an AI-based clinical codes automapping solution.',
+            subpoints: [
+              'Used NLP algorithms to predict the closest standard code set based on code descriptions.',
+              'Conducted a successful pilot with ICD10 codes, demonstrating the potential for the proposed solution.',
+            ],
+          },
         ],
       },
     ],
-    logoImage: null,
+  },
+  {
+    id: '1',
+    company: 'National Health Information Center (NHIC)',
+    logoImage: { url: '/logoNHIC.png' },
+    roles: [
+      {
+        id: 'r3',
+        position: 'Coop Trainee',
+        startDate: '2021-01',
+        endDate: '2021-07',
+        description: [
+          {
+            point:
+              'Designed and developed National Health Accounts system for managing revenue cycles among healthcare entities, ensuring seamless integration with existing registries and services.',
+          },
+          {
+            point:
+              ' Participated in a pilot study on AI in healthcare by exploring the use of AI solution for early breast cancer detection via CT scan screenings.',
+          },
+        ],
+      },
+    ],
   },
   {
     id: '2',
-    company: 'National Health Information Center (NHIC)',
-    position: 'Coop Trainee',
-    startDate: '2021-08',
-    endDate: '2022-03',
-    description: [
+    company: 'Research and Initiatives Center - Prince Sultan University',
+    logoImage: { url: '/logoPSU.png' },
+    roles: [
       {
-        point:
-          'Built National Health Accounts system for Revenue Cycle Management among healthcare providers.',
-      },
-      {
-        point:
-          'Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.',
+        id: 'r1',
+        position: 'Undergraduate Research Assistant',
+        startDate: '2020-09',
+        endDate: '2021-07',
+        description: [
+          {
+            point:
+              'Participated in AI-driven solutions development across diverse fields including robotics, safety compliance, and identity recognition.',
+            subpoints: [
+              'Utilized cutting-edge technologies like TensorFlow, YOLO, and neural networks.',
+            ],
+          },
+          {
+            point:
+              '1st Place Winner at KAUST Challenge: Ideas and Solutions for Hajj and Umrah.',
+            subpoints: [
+              'Designed an AI surveillance and statistics system incorporating Object Detection, Object Classification, and Age Estimation.',
+              'Utilized TensorFlow and YOLO for implementation.',
+              'Participated in data collection and labeling from various sources.',
+            ],
+          },
+          {
+            point:
+              'Designed and developed Object Detection Model for safety in construction sites.',
+            subpoints: [
+              'Built a YOLO-based model for safety measurements and insurance.',
+              'Collected and labeled over 4,000 images of personnel at construction sites.',
+              'Achieved 98% test accuracy for safety compliance detection.',
+            ],
+          },
+          {
+            point:
+              'Developed and maintained robotics integration control panel applications using HTML, CSS, and PHP.',
+          },
+          {
+            point:
+              'Designed user-friendly interfaces for real-time control and monitoring of robotic systems.',
+          },
+          {
+            point:
+              'Integrated backend logic with robotics hardware for seamless communication and automation.',
+          },
+          {
+            point:
+              'Optimized application performance to ensure smooth operation and responsiveness in robotics control.',
+          },
+        ],
       },
     ],
-    logoImage: null,
   },
   {
     id: '3',
-    company: 'Research and Initiatives Center - Prince Sultan University',
-    position: 'Undergraduate Research Assistant',
-    startDate: '2020-09',
-    endDate: '2021-07',
-    description: [
+    company: 'Smart Methods',
+    logoImage: { url: '/logoSmartmethods.png' },
+    roles: [
       {
-        point:
-          'Worked on several research projects in Computer Vision and Machine Learning:',
-        subpoints: [
-          'Facilitated cross-team collaboration by introducing and advocating for DevOps practices.',
-          'Implemented a CI/CD pipeline for deployment automation.',
-        ],
-      },
-      {
-        point:
-          'Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.',
-        subpoints: [
-          'Facilitated cross-team collaboration by introducing and advocating for DevOps practices.',
-          'Implemented a CI/CD pipeline for deployment automation.',
+        id: 'r1',
+        position: 'Summer Intern',
+        startDate: '2021-06',
+        endDate: '2021-08',
+        description: [
+          {
+            point:
+              'Built National Health Accounts system for Revenue Cycle Management among healthcare providers.',
+          },
+          {
+            point:
+              'Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.',
+          },
         ],
       },
     ],
-    logoImage: null,
-  },
-  {
-    id: '1',
-    company: 'Smart Methods',
-    position: 'Summer Intern',
-    startDate: '2021-08',
-    endDate: '2022-03',
-    description:
-      'Built National Health Accounts system for Revenue Cycle Management among healthcare providers. Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.',
-    logoImage: null,
   },
 ]
 
 const workProjects = [
   {
-    id: '1',
+    id: '0',
     company: 'National Unified Health Record (nphies)',
-    position: 'Software Engineer',
-    startDate: '2021-08',
-    endDate: '2022-03',
-    description: [
-      'Built National Health Accounts system for Revenue Cycle Management among healthcare providers.',
-      'Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.',
-    ],
+    position: 'National Health Information Center (NHIC)',
+    description:
+      'National Unified Health Record (nphies) is a centralized, patient-centric platform designed to unify health records across all integrated healthcare providers in the Kingdom. Built upon global best practices and aligned with national and international health data standards, nphies ensures that each patient has a single, longitudinal health record accessible across public and private sectors. By enabling real-time, secure, and standardized health information exchange, nphies enhances care coordination, reduces duplication, improves clinical outcomes, and supports informed decision-making for both care providers and policymakers. It is a key enabler of Saudi Arabia’s digital health transformation and a cornerstone for achieving true health system interoperability.',
+
     logoImage: null,
   },
   {
     id: '1',
     company: 'National Health Core Registry',
-    position: 'Coop Trainee',
-    startDate: '2021-08',
-    endDate: '2022-03',
+    position: 'National Health Information Center (NHIC)',
     description:
-      'Built National Health Accounts system for Revenue Cycle Management among healthcare providers. Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.',
+      'National Health Core Registry serves as a foundational pillar for the digital health ecosystem, acting as the single source of truth for core health entities. It comprises three integrated registries—Patients, Practitioners, and Organizations—each containing verified demographic and identification data. Every entity is assigned a unique national identifier to ensure consistency, accuracy, and traceability across systems. The registry is relied upon by all healthcare providers, digital platforms, and regulatory bodies, enabling unified identity management, seamless data exchange, and trustworthy interoperability across the sector. It underpins critical health systems such as nphies, Sehaty, MOH National Systems, and data reporting.',
     logoImage: null,
   },
   {
     id: '2',
-    company: 'HL7 Object Identifier (OID) Registry',
-    position: 'Undergraduate Research Assistant',
-    startDate: '2020-09',
-    endDate: '2021-07',
+    company: 'Medication Registry',
+    position: 'National Health Information Center (NHIC)',
     description:
-      'Worked on several research projects in Computer Vision and Machine Learning. Developed Object Detection, Face Recognition, and Image Classification applications.',
+      'Medication Registry is a national platform designed to consolidate all medications available across healthcare sectors into a unified, authoritative registry. It integrates data from various sources, regulatory bodies, and international code systems to provide a standardized view of medications, including their identifiers, ingredients, strengths, forms, manufacturers, and regulatory statuses. Each medication entry is assigned a unique Medication Registry ID (MRID) to serve as a single source of truth and facilitate accurate referencing. By establishing a unified medication coding system, the registry aims to enhance interoperability across electronic health systems, support safe prescribing and dispensing, improve pharmacovigilance, and enable consistent medication reporting and analytics across providers, payers, and regulators.',
+    logoImage: null,
+  },
+  {
+    id: '3',
+    company: 'Saudi Health Data Dictionary',
+    position: 'National Health Information Center (NHIC)',
+    description:
+      'Saudi Health Data Dictionary (SHDD) is the national reference for standardized health terminology, designed to unify the definitions and usage of clinical and administrative data across the healthcare ecosystem. It serves as the authoritative source for common health terms, codes, and units of measure, and standardized classifications for diagnoses, procedures, and services. By ensuring consistent meaning and interpretation of health data, SHDD enhances semantic interoperability, supports accurate reporting and analytics, and promotes alignment with national and international standards. It is an essential tool for achieving data quality, regulatory compliance, and seamless integration across digital health systems in Saudi Arabia.',
+    logoImage: null,
+  },
+  {
+    id: '4',
+    company: 'nphies Object Identifier (OID) Registry',
+    position: 'National Health Information Center (NHIC)',
+    description:
+      'nphies Object Identifier (OID) Registry is a national registry designed to automatically issue and manage unique Object Identifiers (OIDs) for participants in the healthcare ecosystem. Aligned with HL7 and NHIC standards, the registry ensures each healthcare entity, systems, and devices receives a globally recognized identifier to support secure and standardized health information exchange (HIE). The OID Registry plays a critical role in enabling national data exchange use cases, particularly within nphies, by ensuring consistent identity referencing across systems. In addition, the registry incorporates a standardized model for all modalities, supporting interoperability for systems like RIS/PACS. Direct integration with platforms such as nphies ensures a seamless and automated OID issuance process, reducing manual effort and improving data consistency.',
     logoImage: null,
   },
 ]
 
-const educationEntries = [
+const educationEntries: EducationEntry[] = [
   {
     id: '1',
     institution: 'Prince Sultan University',
@@ -166,7 +351,7 @@ const educationEntries = [
 // Digital Health
 // Business
 // Data
-const skills = [
+const skills: Skill[] = [
   // Software Enginnering
   {
     skillName: 'Business / Systems Analysis',
@@ -226,23 +411,28 @@ const skills = [
 ]
 
 // Group skills by category
-const groupedSkills = skills.reduce((acc, skill) => {
+const groupedSkills: Record<string, string[]> = skills.reduce((acc, skill) => {
   const { category, skillName } = skill
   if (!acc[category]) {
     acc[category] = []
   }
   acc[category].push(skillName)
   return acc
-}, {})
+}, {} as Record<string, string[]>)
 
 const BLUR_FADE_DELAY = 0.04
 
 export default async function Page() {
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const form = e.target
-    const subject = form.subject.value
-    const message = form.message.value
+
+    const form = e.currentTarget
+
+    const subject = (form.elements.namedItem('subject') as HTMLInputElement)
+      .value
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement)
+      .value
+
     const mailtoLink = `mailto:mohammed.o.abed@outlook.com?subject=${encodeURIComponent(
       subject
     )}&body=${encodeURIComponent(message)}`
@@ -304,39 +494,41 @@ export default async function Page() {
           <BlurFade delay={BLUR_FADE_DELAY * 5}>
             <h2 className='text-xl font-bold'>Work Experience</h2>
           </BlurFade>
-          {experiences.map((work, index) => (
-            <BlurFade key={work.id} delay={BLUR_FADE_DELAY * 6 + index * 0.05}>
-              <ResumeCard
-                logoUrl={work.logoImage?.url ?? ''}
-                altText={work.company ?? ''}
-                title={work.company ?? ''}
-                subtitle={work.position ?? ''}
-                period={`${work.startDate} - ${work.endDate}`}
-                description={
-                  Array.isArray(work.description) ? (
-                    <ul className='list-disc pl-5'>
-                      {work.description.map((item, i) => (
-                        <li key={i} className='mb-2'>
-                          {' '}
-                          {/* Add margin-bottom for spacing */}
-                          {item.point}
-                          {item.subpoints && (
-                            <ul className='list-[circle] pl-5 mt-1'>
-                              {' '}
-                              {/* Add margin-top for spacing */}
-                              {item.subpoints.map((subpoint, j) => (
-                                <li key={j} className='mb-1'>
-                                  {subpoint}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{work.description}</p>
-                  )
+          {experiences.map((company, index) => (
+            <BlurFade
+              key={company.id}
+              delay={BLUR_FADE_DELAY * 6 + index * 0.05}
+            >
+              <CompanyResumeCard
+                logoUrl={company.logoImage?.url ?? ''}
+                altText={company.company}
+                title={company.company}
+                roles={
+                  company.roles?.map((role) => ({
+                    position: role.position,
+                    startDate: role.startDate,
+                    endDate: role.endDate,
+                    description: Array.isArray(role.description) ? (
+                      <ul className='list-disc pl-5'>
+                        {role.description.map((item, i) => (
+                          <li key={i} className='mb-2'>
+                            {item.point}
+                            {item.subpoints && (
+                              <ul className='list-[circle] pl-5 mt-1'>
+                                {item.subpoints.map((subpoint, j) => (
+                                  <li key={j} className='mb-1'>
+                                    {subpoint}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{role.description}</p>
+                    ),
+                  })) ?? []
                 }
               />
             </BlurFade>
@@ -376,10 +568,9 @@ export default async function Page() {
             <BlurFade key={work.id} delay={BLUR_FADE_DELAY * 6 + index * 0.05}>
               <ResumeCard
                 logoUrl={work.logoImage?.url ?? ''}
-                altText={work.company ?? ''}
-                title={work.company ?? ''}
-                subtitle={work.position ?? ''}
-                period={`${work.startDate} - ${work.endDate}`}
+                altText={work.company}
+                title={work.company}
+                subtitle={work.position}
                 description={
                   Array.isArray(work.description) ? (
                     <ul className='list-disc pl-5'>
@@ -431,12 +622,13 @@ export default async function Page() {
                   My Projects
                 </div>
                 <h2 className='text-3xl font-bold tracking-tighter sm:text-5xl'>
-                  Check out my latest open source projects
+                  Check out my latest software projects
                 </h2>
                 <p className='text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed'>
-                  I&apos;ve worked on a variety of projects, from simple
+                  I&apos;ve participated in a variety of projects, from simple
                   websites to complex web applications. Here are a few of my
-                  favorites.
+                  favorites. I&apos;m always looking for new challenges and
+                  opportunities to learn and grow.
                 </p>
               </div>
             </div>
@@ -452,7 +644,6 @@ export default async function Page() {
                   key={project.title}
                   title={project.title}
                   description={project.description}
-                  dates={project.dates}
                   tags={project.technologies}
                   image={project.image}
                   video={project.video}
@@ -474,15 +665,8 @@ export default async function Page() {
                 Get in Touch
               </h2>
               <p className='mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed'>
-                Want to chat? Just shoot me a message via the form below or{' '}
-                <Link
-                  href={DATA.contact.social.X.url}
-                  className='text-blue-500 hover:underline'
-                >
-                  with a direct question on Twitter
-                </Link>{' '}
-                and I&apos;ll respond whenever I can. I will ignore all
-                soliciting.
+                Want to chat? Just shoot me a message via the form below and
+                I&apos;ll respond whenever I can.
               </p>
               <form onSubmit={handleSubmit} className='space-y-4'>
                 {/* Row 1: Name, Email */}
@@ -522,7 +706,7 @@ export default async function Page() {
                 <div>
                   <textarea
                     name='message'
-                    rows='4'
+                    rows={4}
                     placeholder='Your Message'
                     className='w-full px-4 py-2 border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500'
                     required
