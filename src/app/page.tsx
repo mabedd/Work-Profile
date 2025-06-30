@@ -83,7 +83,7 @@ const experiences: Experience[] = [
       {
         id: 'r1',
         position: 'Lead Software Engineer',
-        startDate: '2022-04',
+        startDate: '2024-10',
         endDate: 'Present',
         description: [
           {
@@ -135,8 +135,8 @@ const experiences: Experience[] = [
       {
         id: 'r2',
         position: 'Software Engineer',
-        startDate: '2021-08',
-        endDate: '2022-03',
+        startDate: '2023-01',
+        endDate: '2024-10',
         description: [
           {
             point:
@@ -194,8 +194,8 @@ const experiences: Experience[] = [
       {
         id: 'r3',
         position: 'Coop Trainee',
-        startDate: '2021-01',
-        endDate: '2021-07',
+        startDate: '2021-09',
+        endDate: '2022-03',
         description: [
           {
             point:
@@ -217,8 +217,8 @@ const experiences: Experience[] = [
       {
         id: 'r1',
         position: 'Undergraduate Research Assistant',
-        startDate: '2020-09',
-        endDate: '2021-07',
+        startDate: '2020-08',
+        endDate: '2021-08',
         description: [
           {
             point:
@@ -298,7 +298,7 @@ const workProjects = [
     description:
       'National Unified Health Record (nphies) is a centralized, patient-centric platform designed to unify health records across all integrated healthcare providers in the Kingdom. Built upon global best practices and aligned with national and international health data standards, nphies ensures that each patient has a single, longitudinal health record accessible across public and private sectors. By enabling real-time, secure, and standardized health information exchange, nphies enhances care coordination, reduces duplication, improves clinical outcomes, and supports informed decision-making for both care providers and policymakers. It is a key enabler of Saudi Arabia’s digital health transformation and a cornerstone for achieving true health system interoperability.',
 
-    logoImage: null,
+    logoImage: '/logoNphies.png',
   },
   {
     id: '1',
@@ -340,9 +340,9 @@ const educationEntries: EducationEntry[] = [
     institution: 'Prince Sultan University',
     degree: 'B.Sc. in Software Engineering',
     fieldOfStudy: 'Software Engineering',
-    startDate: '2017-08-06',
-    endDate: '2021-05-27',
-    description: 'Focused on Software Development, AI, and Health Informatics.',
+    startDate: '2017-08',
+    endDate: '2021-05',
+    description: 'With excellence scholarship.',
   },
 ]
 
@@ -358,13 +358,18 @@ const skills: Skill[] = [
     category: 'Software Engineering',
   },
   { skillName: 'Solution Architecture', category: 'Software Engineering' },
+  { skillName: 'System Design', category: 'Software Engineering' },
+  { skillName: 'Domain Driven Design', category: 'Software Engineering' },
   { skillName: 'Software Modelling', category: 'Software Engineering' },
+  { skillName: 'Systems Integration', category: 'Software Engineering' },
+  { skillName: 'Full-Stack Development', category: 'Software Engineering' },
   {
-    skillName: 'Quality Assurance & Testing',
+    skillName: 'Software Process Management',
     category: 'Software Engineering',
   },
+
   {
-    skillName: 'Business / Systems Analysis',
+    skillName: 'Quality Assurance & Testing',
     category: 'Software Engineering',
   },
 
@@ -380,13 +385,20 @@ const skills: Skill[] = [
   { skillName: 'NoSQL', category: 'Development' },
   { skillName: 'Git', category: 'Development' },
   { skillName: 'CI/CD Pipeline', category: 'Development' },
+  { skillName: 'Microservices', category: 'Development' },
+  { skillName: 'Containerization', category: 'Development' },
+  { skillName: 'API Development', category: 'Development' },
+  { skillName: 'API Documentation', category: 'Development' },
 
   // Business and Management
   { skillName: 'Project Management', category: 'Business' },
   { skillName: 'Agile Methodologies', category: 'Business' },
   { skillName: 'Scrum', category: 'Business' },
+  { skillName: 'Operations Management', category: 'Business' },
+  { skillName: 'ITIL Practices', category: 'Business' },
+
   { skillName: 'Service Level Agreements', category: 'Business' },
-  { skillName: 'Business Requirements Documet', category: 'Business' },
+  { skillName: 'Business Documentation', category: 'Business' },
 
   // Data
   { skillName: 'Data Analysis', category: 'Data' },
@@ -400,7 +412,15 @@ const skills: Skill[] = [
   { skillName: 'Unified Health Record', category: 'Digital Health' },
   { skillName: 'HL7 Background', category: 'Digital Health' },
   {
+    skillName: 'IHE Profiles Background',
+    category: 'Digital Health',
+  },
+  {
     skillName: 'Health Information Exchange (HIE)',
+    category: 'Digital Health',
+  },
+  {
+    skillName: 'Health Information Systems (HIS)',
     category: 'Digital Health',
   },
 
@@ -408,6 +428,9 @@ const skills: Skill[] = [
   { skillName: 'Jira', category: 'Tools & Technologies' },
   { skillName: 'Azure DevOps', category: 'Tools & Technologies' },
   { skillName: 'Apigee API Management', category: 'Tools & Technologies' },
+  { skillName: 'Google Cloud Platform', category: 'Tools & Technologies' },
+  { skillName: 'Docker', category: 'Tools & Technologies' },
+  { skillName: 'Elastic', category: 'Tools & Technologies' },
 ]
 
 // Group skills by category
@@ -567,7 +590,7 @@ export default async function Page() {
           {workProjects.map((work, index) => (
             <BlurFade key={work.id} delay={BLUR_FADE_DELAY * 6 + index * 0.05}>
               <ResumeCard
-                logoUrl={work.logoImage?.url ?? ''}
+                logoUrl={work.logoImage ?? ''}
                 altText={work.company}
                 title={work.company}
                 subtitle={work.position}
