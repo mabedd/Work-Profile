@@ -1,6 +1,4 @@
 "use client";
-import Link from "next/link";
-import Markdown from "react-markdown";
 
 import { HackathonCard } from "@/components/hackathon-card";
 import BlurFade from "@/components/magicui/blur-fade";
@@ -12,6 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
 import { CredentialCard } from "@/components/credential-card";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon } from "lucide-react";
+import { AchievementCard } from "@/components/achievements-card";
 
 // Role inside a company
 interface Role {
@@ -64,8 +67,8 @@ interface EducationEntry {
   institution: string;
   degree: string;
   fieldOfStudy: string;
-  startDate: string;
-  endDate: string;
+  startDate?: string;
+  endDate?: string;
   description: string;
   logoImage: string;
 }
@@ -80,7 +83,7 @@ interface Skill {
 interface CourseEntry {
   id: string;
   title: string;
-  provider: string;
+  provider?: string;
   date?: string;
   description?: string;
 }
@@ -90,8 +93,18 @@ interface CertificateEntry {
   id: string;
   title: string;
   issuer: string;
-  date: string;
+  date?: string;
   description?: string;
+}
+
+// --- Achievements / Awards ---
+interface AchievementEntry {
+  id: string;
+  title: string;
+  issuer?: string;
+  date?: string; // year-only if you like
+  description?: string;
+  logoImage?: string; // optional, if you want to add logos later
 }
 
 const experiences: Experience[] = [
@@ -133,7 +146,8 @@ const experiences: Experience[] = [
             ],
           },
           {
-            point: "Enhancing National Health Core Registry Services.",
+            point:
+              "Leading National Health Core Registry services technical activities.",
             subpoints: [
               "Lead initiatives to integrate new data sources into NHCR to expand coverage and improve data.",
               "Optimize integrations with consumers to enhance service delivery and quality.",
@@ -142,13 +156,17 @@ const experiences: Experience[] = [
           },
           {
             point:
-              "Contributing to the Health IT Certification Program (Mutamad).",
+              "Project Manager for the Health IT Registration and Accreditation Program.",
             subpoints: [
-              "Serve as a Product Owner for the Mutamad project, managing vision, backlog, and features.",
-              "Play a key role in designing, building, and refining national certification standards.",
-              "Ensure alignment with international frameworks such as HL7, ISO, and IHE profiles.",
-              "Work closely with regulatory bodies and technical teams to ensure the standards are supportive.",
+              "Led the development of the national Health IT Evaluation and Accreditation Framework, defining assessment criteria, processes, and compliance standards.",
+              "Directed coordination across technical, regulatory, and policy teams to ensure seamless implementation and stakeholder alignment.",
+              "Ensured alignment with international frameworks such as HL7, ISO, and IHE profiles to uphold global best practices.",
+              "Oversaw the program’s successful launch under the patronage of H.E. the Minister of Health during the Global Health Exhibition (GHE) 2025.",
             ],
+          },
+          {
+            point:
+              "Directing the end-to-end technical delivery of nationwide digital health projects ensuring excellence.",
           },
         ],
       },
@@ -265,6 +283,21 @@ const experiences: Experience[] = [
               "Achieved 98% test accuracy for safety compliance detection.",
             ],
           },
+        ],
+      },
+    ],
+  },
+  {
+    id: "3",
+    company: "Smart Methods",
+    logoImage: { url: "/logoSmartmethods.png" },
+    roles: [
+      {
+        id: "r1",
+        position: "IoT and AI Intern",
+        startDate: "2020-06",
+        endDate: "2020-08",
+        description: [
           {
             point:
               "Developed and maintained robotics integration control panel applications using HTML, CSS, and PHP.",
@@ -285,28 +318,38 @@ const experiences: Experience[] = [
       },
     ],
   },
+];
+
+const achievements: AchievementEntry[] = [
   {
-    id: "3",
-    company: "Smart Methods",
-    logoImage: { url: "/logoSmartmethods.png" },
-    roles: [
-      {
-        id: "r1",
-        position: "Summer Intern",
-        startDate: "2021-06",
-        endDate: "2021-08",
-        description: [
-          {
-            point:
-              "Built National Health Accounts system for Revenue Cycle Management among healthcare providers.",
-          },
-          {
-            point:
-              "Conducted a pilot study about the use of Artificial Intelligence in radiology for enhancing the Breast Cancer diagnosis.",
-          },
-        ],
-      },
-    ],
+    id: "a_nhic_onboarding",
+    title:
+      "Recognition for National Onboarding with nphies & National Health Core Registry",
+    issuer: "National Health Information Center (NHIC)",
+    description:
+      "Recognized for contributions to nationwide onboarding and data-integration efforts across nphies and NHCR.",
+  },
+  {
+    id: "a_national_initiatives_2024",
+    title: "Recognition for Participation in National Initiatives",
+    issuer: "National Health Information Center (NHIC)",
+    date: "2024",
+    description:
+      "Acknowledged for active participation and impact across key national digital-health programs.",
+  },
+  {
+    id: "a_kaust_hajj_umrah",
+    title: "1st Place — KAUST Challenge: Ideas and Solutions for Hajj & Umrah",
+    issuer: "King Abdullah University of Science and Technology (KAUST)",
+    description:
+      "AI-driven surveillance & statistics solution (object detection, classification, age estimation) built with TensorFlow/YOLO.",
+  },
+  {
+    id: "a_psu_excellence_scholarship",
+    title: "Excellence Scholarship",
+    issuer: "Prince Sultan University",
+    description:
+      "Merit-based academic scholarship awarded for outstanding performance in Software Engineering.",
   },
 ];
 
@@ -316,8 +359,7 @@ const workProjects = [
     company: "National Unified Health Record (nphies)",
     position: "National Health Information Center (NHIC)",
     description:
-      "National Unified Health Record (nphies) is a centralized, patient-centric platform designed to unify health records across all integrated healthcare providers in the Kingdom. Built upon global best practices and aligned with national and international health data standards, nphies ensures that each patient has a single, longitudinal health record accessible across public and private sectors. By enabling real-time, secure, and standardized health information exchange, nphies enhances care coordination, reduces duplication, improves clinical outcomes, and supports informed decision-making for both care providers and policymakers. It is a key enabler of Saudi Arabia’s digital health transformation and a cornerstone for achieving true health system interoperability.",
-
+      "The National Unified Health Record (nphies) is a centralized, patient-centric platform designed to unify health records across all healthcare providers in Saudi Arabia. Built upon global best practices and aligned with national and international health data standards, nphies ensures that each patient has a single, longitudinal health record accessible across public and private sectors. By enabling real-time, secure, and standardized health information exchange, nphies enhances care coordination, reduces duplication, improves clinical outcomes, and supports data-driven policymaking. As part of NHIC’s technical leadership team, I played a key role in the national onboarding of healthcare providers and later transitioned into technical supervision and expansion activities, enhancing system integrations between nphies and foundational national data sources such as the Health Core Registries. My focus has been on strengthening data quality, scalability, and nationwide interoperability.",
     logoImage: "/logoNphies.png",
   },
   {
@@ -325,75 +367,151 @@ const workProjects = [
     company: "National Health Core Registry",
     position: "National Health Information Center (NHIC)",
     description:
-      "National Health Core Registry serves as a foundational pillar for the digital health ecosystem, acting as the single source of truth for core health entities. It comprises three integrated registries—Patients, Practitioners, and Organizations—each containing verified demographic and identification data. Every entity is assigned a unique national identifier to ensure consistency, accuracy, and traceability across systems. The registry is relied upon by all healthcare providers, digital platforms, and regulatory bodies, enabling unified identity management, seamless data exchange, and trustworthy interoperability across the sector. It underpins critical health systems such as nphies, Sehaty, MOH National Systems, and data reporting.",
+      "The National Health Core Registry serves as a foundational pillar of Saudi Arabia’s digital health ecosystem, acting as the single source of truth for core health entities. It comprises three integrated registries — Patients, Practitioners, and Organizations — each containing verified demographic and identification data. Every entity is assigned a unique national identifier to ensure consistency, accuracy, and traceability across systems. The registry enables unified identity management, seamless data exchange, and trustworthy interoperability across platforms such as nphies, Sehaty, and MOH National Systems. As Technical Lead, I provided governance oversight, architectural direction, and integration strategies to ensure continuous evolution, scalability, and alignment with emerging national health initiatives.",
     logoImage: null,
   },
   {
     id: "2",
-    company: "Medication Registry",
+    company: "Health IT Registration and Accreditation Program",
     position: "National Health Information Center (NHIC)",
     description:
-      "Medication Registry is a national platform designed to consolidate all medications available across healthcare sectors into a unified, authoritative registry. It integrates data from various sources, regulatory bodies, and international code systems to provide a standardized view of medications, including their identifiers, ingredients, strengths, forms, manufacturers, and regulatory statuses. Each medication entry is assigned a unique Medication Registry ID (MRID) to serve as a single source of truth and facilitate accurate referencing. By establishing a unified medication coding system, the registry aims to enhance interoperability across electronic health systems, support safe prescribing and dispensing, improve pharmacovigilance, and enable consistent medication reporting and analytics across providers, payers, and regulators.",
+      "A national initiative led by the National Health Information Center to establish a unified framework for certifying and accrediting digital health solutions across Saudi Arabia. The program ensures that all Health IT systems — including Electronic Medical Records (EMRs), Health Information Exchange (HIE) platforms, and digital health applications — comply with national standards for interoperability, security, and quality. It defines the governance, compliance, and conformance testing frameworks aligned with international standards such as HL7, FHIR, and IHE, supporting safer and more interoperable digital healthcare across the Kingdom. As Project Manager, I oversaw the program’s end-to-end delivery, coordinating multidisciplinary teams to develop the certification model, testing infrastructure, and national accreditation policies that now underpin the Kingdom’s digital health ecosystem.",
     logoImage: null,
   },
   {
     id: "3",
-    company: "Saudi Health Data Dictionary",
+    company: "Medication Dictionary",
     position: "National Health Information Center (NHIC)",
     description:
-      "Saudi Health Data Dictionary (SHDD) is the national reference for standardized health terminology, designed to unify the definitions and usage of clinical and administrative data across the healthcare ecosystem. It serves as the authoritative source for common health terms, codes, and units of measure, and standardized classifications for diagnoses, procedures, and services. By ensuring consistent meaning and interpretation of health data, SHDD enhances semantic interoperability, supports accurate reporting and analytics, and promotes alignment with national and international standards. It is an essential tool for achieving data quality, regulatory compliance, and seamless integration across digital health systems in Saudi Arabia.",
+      "The Medication Dictionary is a national platform designed to consolidate all medications available across healthcare sectors into a unified, authoritative registry. It integrates data from diverse sources, regulatory bodies, and international code systems to provide a standardized view of medications — including identifiers, ingredients, strengths, forms, manufacturers, and regulatory statuses. Each medication is assigned a unique Medication Registry ID (MRID) to serve as a single source of truth and enable accurate referencing. By establishing a unified medication coding system, the registry enhances interoperability across electronic health systems, supports safe prescribing and dispensing, and strengthens pharmacovigilance. As the Technical Project Manager, I oversaw the system’s architecture design, data-integration framework, and governance model — ensuring alignment with national digital health standards and supporting the Kingdom’s health information interoperability goals.",
     logoImage: null,
   },
   {
     id: "4",
+    company: "Saudi Health Data Dictionary (SHDD)",
+    position: "National Health Information Center (NHIC)",
+    description:
+      "The Saudi Health Data Dictionary (SHDD) is the national reference for standardized health terminology, designed to unify the definitions and usage of clinical and administrative data across the healthcare ecosystem. It serves as the authoritative source for health terms, codes, and classifications, supporting semantic interoperability and data quality across all health systems. SHDD underpins regulatory compliance and consistent reporting at the national level. As Technical Project Manager, I led the project’s technical development and delivery, overseeing the design of its data model, integration framework, and terminology management processes, ensuring alignment with HL7, SNOMED CT, and other international standards.",
+    logoImage: null,
+  },
+  {
+    id: "5",
+    company: "NHIC eServices Portal",
+    position: "National Health Information Center (NHIC)",
+    description:
+      "The NHIC eServices Portal is the unified digital gateway for accessing and managing all National Health Information Center services. It provides a streamlined interface for healthcare entities to register, request integrations, and manage their participation in national health programs. The platform features a comprehensive Service Catalog, centralized Single Sign-On (SSO), and a Developer Portal for API access and integration management. As a Software Engineer, I contributed to the system’s architecture, user experience design, and service management modules, ensuring secure and scalable integration across NHIC’s national platforms.",
+    logoImage: null,
+  },
+  {
+    id: "6",
     company: "nphies Object Identifier (OID) Registry",
     position: "National Health Information Center (NHIC)",
     description:
-      "nphies Object Identifier (OID) Registry is a national registry designed to automatically issue and manage unique Object Identifiers (OIDs) for participants in the healthcare ecosystem. Aligned with HL7 and NHIC standards, the registry ensures each healthcare entity, systems, and devices receives a globally recognized identifier to support secure and standardized health information exchange (HIE). The OID Registry plays a critical role in enabling national data exchange use cases, particularly within nphies, by ensuring consistent identity referencing across systems. In addition, the registry incorporates a standardized model for all modalities, supporting interoperability for systems like RIS/PACS. Direct integration with platforms such as nphies ensures a seamless and automated OID issuance process, reducing manual effort and improving data consistency.",
+      "The nphies Object Identifier (OID) Registry is a national platform developed to automatically issue and manage unique Object Identifiers (OIDs) for all participants in Saudi Arabia’s healthcare ecosystem. Fully aligned with HL7 and NHIC standards, the registry ensures that every healthcare entity, system, and device receives a globally recognized identifier to enable secure and standardized health information exchange. As the System Designer and Engineer, I built the registry architecture, established integration with nphies, and implemented automated OID issuance workflows — eliminating manual validation, improving data consistency, and enhancing nationwide interoperability.",
     logoImage: null,
   },
 ];
 
 const educationEntries: EducationEntry[] = [
   {
+    id: "2",
+    institution: "Edinburgh Napier University",
+    degree: "Master of Business Administration (MBA)",
+    fieldOfStudy: "IT Strategy and Governance",
+    description:
+      "Pursuing an MBA with a specialization in IT Strategy and Governance, focusing on aligning technology initiatives with business objectives, digital transformation, and leadership in large-scale enterprise programs. The program emphasizes strategic planning, organizational performance, and innovation management within digital ecosystems.",
+    logoImage: "/logoEN.png",
+  },
+  {
     id: "1",
     institution: "Prince Sultan University",
     degree: "B.Sc. in Software Engineering",
     fieldOfStudy: "Software Engineering",
-    startDate: "2017-08",
-    endDate: "2021-05",
-    description: "With excellence scholarship.",
+    description:
+      "Graduated with Excellence Scholarship, focusing on software design, system architecture, and data-driven development. Completed multiple research and applied projects in Artificial Intelligence, Robotics, and Digital Health innovation, earning national recognition for academic and technical achievements.",
     logoImage: "/logoPSU.png",
   },
 ];
 
 const courses: CourseEntry[] = [
+  // --- Healthcare ---
+  { id: "c_applied_ai_health", title: "Applied AI in Healthcare" },
   {
-    id: "c1",
-    title: "AI for Healthcare",
-    provider: "Stanford Online",
-    description:
-      "Covered machine learning applications in clinical and public health.",
+    id: "c_hinf_context",
+    title: "The Social and Technical Context of Health Informatics",
+  },
+  { id: "c_hc_quality_gov", title: "Healthcare Data Quality and Governance" },
+  { id: "c_hl7_starter", title: "HL7 Starter Module" },
+
+  // --- Architecture & Software Engineering ---
+  { id: "c_arch_found", title: "Software Architecture Foundations" },
+  {
+    id: "c_arch_ddd",
+    title: "Software Architecture: Domain-Driven Design (DDD)",
+  },
+
+  // --- Integration / APIs ---
+  {
+    id: "c_apigee",
+    title: "Google API Developer Learning Path with Apigee",
+    provider: "Google Cloud",
+  },
+
+  // --- DevOps & Cloud ---
+  { id: "c_az_devops", title: "DevOps Fundamentals", provider: "Microsoft" },
+  {
+    id: "c_aws_fund",
+    title: "AWS Fundamentals Specialization",
+    provider: "Coursera / AWS",
+  },
+
+  // --- Data & AI ---
+  {
+    id: "c_dl_spec",
+    title: "Deep Learning Specialization",
+    provider: "DeepLearning.AI",
   },
   {
-    id: "c2",
-    title: "Interoperability in Health IT",
-    provider: "Coursera - Johns Hopkins University",
+    id: "c_genai_path",
+    title: "Google Generative AI Learning Path",
+    provider: "Google Cloud",
   },
+
+  // --- Analytics / BI ---
+  {
+    id: "c_powerbi",
+    title: "Microsoft Power BI Desktop for Business Intelligence",
+    provider: "Microsoft",
+  },
+
+  // --- UX / Design ---
+  { id: "c_ux_essentials", title: "User Experience Design Essentials" },
 ];
 
 const certificates: CertificateEntry[] = [
   {
+    id: "cert0",
+    title: "Google Cloud Certified Generative AI Leader",
+    issuer: "Google Cloud",
+    date: "2025",
+  },
+  {
     id: "cert1",
-    title: "ITIL v4 Foundation",
-    issuer: "Axelos Best Practices",
-    date: "2021",
+    title: "Microsoft Azure Fundamentals (AZ-900)",
+    issuer: "Microsoft",
+    date: "2022",
   },
   {
     id: "cert2",
     title: "Applied AI for Healthcare - Developer",
     issuer: "King Faisal Specialized Hospital and Research Center",
-    date: "2023-02",
+    date: "2022",
+  },
+  {
+    id: "cert3",
+    title: "ITIL v4 Foundation",
+    issuer: "Axelos Best Practices",
+    date: "2020",
   },
 ];
 
@@ -491,7 +609,7 @@ const groupedSkills: Record<string, string[]> = skills.reduce((acc, skill) => {
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default async function Page() {
+export default function Page() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -508,6 +626,22 @@ export default async function Page() {
     window.location.href = mailtoLink;
   };
 
+  const pageSize = 5;
+  const [coursePage, setCoursePage] = useState(1);
+  const totalCoursePages = Math.ceil(courses.length / pageSize);
+  const courseSliceStart = (coursePage - 1) * pageSize;
+  const currentCourses = courses.slice(
+    courseSliceStart,
+    courseSliceStart + pageSize
+  );
+
+  useEffect(() => {
+    // Smooth-scroll back to the section when page changes (nice UX)
+    document
+      .getElementById("courses")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [coursePage]);
+
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       <section id="hero">
@@ -523,7 +657,7 @@ export default async function Page() {
               <BlurFadeText
                 className="max-w-[600px] md:text-xl"
                 delay={BLUR_FADE_DELAY}
-                text="Enthusiastic Software Engineer ! Dedicated to using technology to improve the quality of life. Passionate about building innovative solutions that make a difference."
+                text="Results-driven technology professional committed to advancing digital innovation and improving quality of life through impactful solutions."
               />
             </div>
             {/* <BlurFade delay={BLUR_FADE_DELAY}>
@@ -545,9 +679,9 @@ export default async function Page() {
             Passionate for revolutionizing the Digital Health sector. My journey
             has been driven by a commitment to developing innovative Health IT
             solutions that address complex challenges. With hands-on experience
-            in leading national Digital Health projects, I’ve had the privilege
-            of contributing to groundbreaking advancements in Software
-            Development, AI, and Health Informatics.
+            in leading national Digital Health projects, I’ve contributed to
+            pioneering initiatives in digital health, leading transformative
+            solutions across technology and innovation.
             <br />
             <br />
             I’m not just about coding and systems; I’m about making a tangible
@@ -620,7 +754,13 @@ export default async function Page() {
                 altText={education.institution || ""}
                 title={education.institution || ""}
                 subtitle={education.degree || ""}
-                period={`${education.startDate} - ${education.endDate}`}
+                period={
+                  education.startDate || education.endDate
+                    ? `${education.startDate ?? ""}${
+                        education.endDate ? ` - ${education.endDate}` : ""
+                      }`
+                    : undefined
+                }
                 description={education.description || ""}
               />
             </BlurFade>
@@ -657,6 +797,28 @@ export default async function Page() {
         </div>
       </section>
 
+      <section id="achievements">
+        <div className="flex min-h-0 flex-col gap-y-3">
+          <BlurFade delay={BLUR_FADE_DELAY * 12}>
+            <h2 className="text-xl font-bold">Achievements & Awards</h2>
+          </BlurFade>
+
+          {/* 3 per row on lg, 2 on sm, 1 on mobile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3">
+            {achievements.map((a, idx) => (
+              <BlurFade key={a.id} delay={BLUR_FADE_DELAY * 13 + idx * 0.05}>
+                <AchievementCard
+                  title={a.title}
+                  issuer={a.issuer}
+                  date={a.date}
+                  description={a.description}
+                />
+              </BlurFade>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="certificates">
         <div className="flex flex-col gap-y-3">
           <BlurFade delay={BLUR_FADE_DELAY * 15}>
@@ -667,7 +829,7 @@ export default async function Page() {
               <CredentialCard
                 title={cert.title}
                 subtitle={cert.issuer}
-                date={cert.date}
+                date={cert.date ?? ""}
                 description={cert.description}
                 icon="certificate"
               />
@@ -681,20 +843,54 @@ export default async function Page() {
           <BlurFade delay={BLUR_FADE_DELAY * 13}>
             <h2 className="text-xl font-bold">Courses</h2>
           </BlurFade>
-          {courses.map((course, index) => (
+          {currentCourses.map((course, index) => (
             <BlurFade
               key={course.id}
               delay={BLUR_FADE_DELAY * 14 + index * 0.05}
             >
               <CredentialCard
                 title={course.title}
-                subtitle={course.provider}
+                subtitle={course.provider ?? ""}
                 date={course.date ?? ""}
                 description={course.description}
                 icon="course"
               />
             </BlurFade>
           ))}
+          {/* Pagination Controls */}
+          <div className="mt-2 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setCoursePage((p) => Math.max(1, p - 1))}
+              disabled={coursePage === 1}
+              aria-label="Previous page"
+              className={cn(
+                "inline-flex items-center justify-center rounded-md border p-1.5",
+                coursePage === 1
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-muted"
+              )}
+            >
+              <ChevronLeftIcon className="size-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() =>
+                setCoursePage((p) => Math.min(totalCoursePages, p + 1))
+              }
+              disabled={coursePage === totalCoursePages}
+              aria-label="Next page"
+              className={cn(
+                "inline-flex items-center justify-center rounded-md border p-1.5",
+                coursePage === totalCoursePages
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-muted"
+              )}
+            >
+              <ChevronRightIcon className="size-4" />
+            </button>
+          </div>
         </div>
       </section>
 
@@ -723,7 +919,7 @@ export default async function Page() {
         </div>
       </section>
 
-      <section id="opensource-projects">
+      {/* <section id="opensource-projects">
         <div className="space-y-12 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 11}>
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -763,7 +959,7 @@ export default async function Page() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
       <section id="contact">
         <div className="grid items-center justify-center gap-4 px-4 text-center md:px-6 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 16}>

@@ -1,12 +1,12 @@
 "use client";
 
-import { CalendarIcon, GraduationCapIcon } from "lucide-react";
+import { BookOpenIcon, GraduationCapIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 interface CredentialCardProps {
   title: string;
-  subtitle: string; // provider or issuer
+  subtitle: string;
   date: string;
   description?: string;
   icon?: "course" | "certificate";
@@ -21,7 +21,7 @@ export const CredentialCard: React.FC<CredentialCardProps> = ({
   icon = "course",
   className = "",
 }) => {
-  const Icon = icon === "certificate" ? GraduationCapIcon : CalendarIcon;
+  const Icon = icon === "certificate" ? GraduationCapIcon : BookOpenIcon;
 
   return (
     <Card
