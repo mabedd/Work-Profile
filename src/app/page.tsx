@@ -635,13 +635,6 @@ export default function Page() {
     courseSliceStart + pageSize
   );
 
-  useEffect(() => {
-    // Smooth-scroll back to the section when page changes (nice UX)
-    document
-      .getElementById("courses")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [coursePage]);
-
   return (
     <main className="flex flex-col min-h-[100dvh] space-y-10">
       <section id="hero">
